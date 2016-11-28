@@ -1,0 +1,30 @@
+{
+    "name": "quartet/strile-bundle",
+    "description": "Integration of stripe into symfony2.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "require": {
+        "PHP": ">=7.0",
+        "symfony/framework-bundle": "~2.8",
+        "stripe/stripe-php": "~4.2.0"
+    },
+    "require-dev": {
+        "symfony/browser-kit": "~2.8",
+        "phpunit/phpunit": "5.5.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Quartet\\Bundle\\StripeBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+          "Quartet\\Bundle\\StripeBundle\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.0-dev"
+        }
+    }
+}
