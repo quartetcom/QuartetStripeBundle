@@ -16,4 +16,4 @@ dependencies:
 test:
   override:
     # run unit tests
-    - phpunit
+    - ./vendor/bin/phpunit
