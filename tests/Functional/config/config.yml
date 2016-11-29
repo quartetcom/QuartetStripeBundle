@@ -1,0 +1,5 @@
+framework:
+  secret: secret
+quartet_stripe:
+  api_secret: stripe api secret
+  api_public: stripe api public
