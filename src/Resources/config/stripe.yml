@@ -1,0 +1,5 @@
+services:
+  quartet.stripe:
+    class: Cartalyst\Stripe\Stripe
+    arguments:
+      - ~ # api key
