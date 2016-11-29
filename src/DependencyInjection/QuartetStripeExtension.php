@@ -2,9 +2,10 @@
 
 namespace Quartet\Bundle\StripeBundle\DependencyInjection;
 
-use Stripe\Stripe;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class QuartetStripeExtension extends Extension
 {
@@ -16,29 +17,9 @@ class QuartetStripeExtension extends Extension
         $configuration = new Configuration();
         $configs = $this->processConfiguration($configuration, $config);
 
-        $this->remapParameters($container, $configs, 'quartet_stripe.%s', ['api_secret', 'api_public', 'test']);
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('stripe.yml');
 
-        Stripe::setApiKey($container->getParameter('quartet_stripe.api_secret'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlias()
-    {
-        return 'quartet_stripe';
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     * @param array            $configs
-     * @param string           $path
-     * @param array            $keys
-     */
-    private function remapParameters(ContainerBuilder $container, array $configs, $path, array $keys)
-    {
-        foreach ($keys as $key) {
-            $container->setParameter(sprintf($path, $key), $configs[$key]);
-        }
+        $container->getDefinition('quartet.stripe')->replaceArgument(0, $configs['api_secret']);
     }
 }

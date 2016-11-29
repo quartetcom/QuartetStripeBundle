@@ -6,10 +6,9 @@
     "require": {
         "PHP": ">=7.0",
         "symfony/framework-bundle": "~2.8",
-        "stripe/stripe-php": "~4.2.0"
+        "cartalyst/stripe": "^2.0.7"
     },
     "require-dev": {
-        "symfony/browser-kit": "~2.8",
         "phpunit/phpunit": "5.5.*"
     },
     "autoload": {
@@ -24,7 +23,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.0-dev"
+            "dev-master": "1.0-dev"
         }
     }
 }
