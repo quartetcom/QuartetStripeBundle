@@ -1,5 +1,5 @@
 {
-    "name": "quartet/strile-bundle",
+    "name": "quartet/stripe-bundle",
     "description": "Integration of stripe into symfony2.",
     "type": "symfony-bundle",
     "license": "MIT",
