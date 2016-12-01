@@ -27,6 +27,15 @@ class TestKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config.yml');
+        $version = self::MAJOR_VERSION.'.'.self::MINOR_VERSION;
+
+        $path = __DIR__.'/config/config.yml';
+        $versionSpecificPath = __DIR__.'/config/'.$version.'/config.yml';
+
+        if (file_exists($versionSpecificPath)) {
+            $path = $versionSpecificPath;
+        }
+
+        $loader->load($path);
     }
 }
