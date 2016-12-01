@@ -3,3 +3,8 @@ services:
     class: Cartalyst\Stripe\Stripe
     arguments:
       - ~ # api key
+
+  quartet.stripe.api:
+    class: Quartet\Bundle\StripeBundle\ApiFactory
+    arguments:
+      - "@quartet.stripe"
