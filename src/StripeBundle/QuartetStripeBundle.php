@@ -1,6 +1,6 @@
 <?php
 
-namespace Quartet\Bundle\StripeBundle;
+namespace Quartet\StripeBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

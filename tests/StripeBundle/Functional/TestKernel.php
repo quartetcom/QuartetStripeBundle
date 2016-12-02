@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Quartet\Bundle\StripeBundle\Functional;
+namespace Quartet\StripeBundle\Functional;
 
 
-use Quartet\Bundle\StripeBundle\QuartetStripeBundle;
+use Quartet\StripeBundle\QuartetStripeBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;

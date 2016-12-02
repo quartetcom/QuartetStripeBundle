@@ -1,6 +1,6 @@
 <?php
 
-namespace Quartet\Bundle\StripeBundle\DependencyInjection;
+namespace Quartet\StripeBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
