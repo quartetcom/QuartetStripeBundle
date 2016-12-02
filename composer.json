@@ -13,14 +13,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Quartet\\Bundle\\StripeBundle\\": "src"
             "Quartet\\Stripe\\": "src/Stripe",
+            "Quartet\\StripeBundle\\": "src/StripeBundle"
         }
     },
     "autoload-dev": {
         "psr-4": {
-          "Quartet\\Bundle\\StripeBundle\\": "tests"
             "Quartet\\Stripe\\": "tests/Stripe",
+            "Quartet\\StripeBundle\\": "tests/StripeBundle"
         }
     },
     "extra": {

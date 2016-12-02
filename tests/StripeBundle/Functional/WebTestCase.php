@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Quartet\Bundle\StripeBundle\Functional;
+namespace Quartet\StripeBundle\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseWebTestCase;
 

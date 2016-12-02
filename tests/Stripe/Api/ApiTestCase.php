@@ -6,7 +6,6 @@ namespace Quartet\Stripe\Api;
 
 use Quartet\Stripe\Stripe;
 use Stripe\ApiRequestor;
-use Stripe\ApiResource;
 use Stripe\HttpClient\ClientInterface;
 
 class ApiTestCase extends \PHPUnit_Framework_TestCase
@@ -65,6 +64,22 @@ class ApiTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param       $code
+     * @param       $fixture
+     * @param array $header
+     *
+     * @return \PHPUnit_Framework_MockObject_Stub
+     */
+    public function returnResponseFromFixture($code, $fixture, array $header = [])
+    {
+        return $this->returnResponse(
+            $code,
+            $this->getResponseJson($fixture),
+            $header
+        );
+    }
+
+    /**
      * @param ClientInterface $http
      *
      * @return \PHPUnit_Framework_MockObject_MockObject|ClientInterface
@@ -76,5 +91,21 @@ class ApiTestCase extends \PHPUnit_Framework_TestCase
         ApiRequestor::setHttpClient($http);
 
         return $http;
+    }
+
+    /**
+     * @param $path
+     *
+     * @return string
+     */
+    public function getResponseJson($path)
+    {
+        $path = __DIR__.'/../Resource/fixture/response'.$path;
+
+        if (file_exists($path)) {
+            return file_get_contents($path);
+        }
+
+        throw new \InvalidArgumentException(sprintf('Response json was not found at path "%s"', $path));
     }
 }
