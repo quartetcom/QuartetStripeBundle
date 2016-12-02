@@ -61,7 +61,7 @@ class Charge
      * @param array|null $params
      * @param array|string|null $options
      *
-     * @return Charge The created charge.
+     * @return Model\Charge The created charge.
      */
     public function create($params = null, $options = null)
     {
@@ -77,7 +77,7 @@ class Charge
      * @param array|null $params
      * @param array|string|null $options
      *
-     * @return Charge The updated charge.
+     * @return Model\Charge The updated charge.
      */
     public function update($id, $params = null, $options = null)
     {

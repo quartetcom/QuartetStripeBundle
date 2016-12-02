@@ -52,6 +52,16 @@ class ApiTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $path
+     *
+     * @return \PHPUnit_Framework_Constraint
+     */
+    public function stripeUrl($path)
+    {
+        return $this->equalTo('https://api.stripe.com/v1' . $path);
+    }
+
+    /**
      * @param       $code
      * @param       $body
      * @param array $header
@@ -91,6 +101,18 @@ class ApiTestCase extends \PHPUnit_Framework_TestCase
         ApiRequestor::setHttpClient($http);
 
         return $http;
+    }
+
+    /**
+     * @param callable $fn
+     */
+    public function setupWithIsolatedHttpClient(Callable $fn)
+    {
+        $http = $this->mockHttpClient();
+
+        $fn($http);
+
+        $this->mockHttpClient($this->http);
     }
 
     /**

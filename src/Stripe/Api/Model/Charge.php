@@ -106,12 +106,10 @@ class Charge
      *
      * @return Charge
      */
-    private function map(Callable $fn)
+    public function map(Callable $fn)
     {
-        return $this->scope
-            ->run(function (Scope $scope) use ($fn) {
-                return new self($scope, $fn($this->delegate));
-            })
-            ->get();
+        return $this->scope->evaluate(function (Scope $scope) use ($fn) {
+            return new self($scope, $fn($this->delegate));
+        });
     }
 }
