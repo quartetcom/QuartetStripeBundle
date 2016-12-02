@@ -32,6 +32,14 @@ class Charge
     }
 
     /**
+     * @return Delegate
+     */
+    public function value()
+    {
+        return $this->delegate;
+    }
+
+    /**
      * @param array|string|null $options
      *
      * @return Charge The saved charge.

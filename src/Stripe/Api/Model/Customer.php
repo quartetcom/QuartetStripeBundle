@@ -67,26 +67,17 @@ class Customer
     /**
      * @param array|null $params
      *
-     * @return array An array of the customer's Charges.
+     * @return Collection An array of the customer's Charges.
      */
     public function charges($params = null)
     {
         return $this->scope->evaluate(function (Scope $scope) use ($params) {
-            $charges = $this->delegate->charges($params);
+            /* @var StripeApi\Collection $collection */
+            $collection = $this->delegate->charges($params);
 
-            return array_map(function (StripeApi\Charge $charge) use ($scope) {
+            return new Collection($scope, $collection, function (StripeApi\Charge $charge) use ($scope) {
                 return new Charge($scope, $charge);
-            }, $charges);
-        });
-    }
-
-    /**
-     * @return Customer The updated customer.
-     */
-    public function deleteDiscount()
-    {
-        return $this->map(function (Delegate $delegate) {
-            return $delegate->deleteDiscount();
+            });
         });
     }
 
@@ -95,7 +86,7 @@ class Customer
      *
      * @return Customer
      */
-    private function map(Callable $fn)
+    public function map(Callable $fn)
     {
         return $this->scope->evaluate(function (Scope $scope) use ($fn) {
             return new self($scope, $fn($this->delegate));

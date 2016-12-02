@@ -57,10 +57,12 @@ class CustomerTest extends ApiTestCase
         $this->http
             ->expects($this->once())
             ->method('request')
-            ->with('post', 'https://api.stripe.com/v1/customers/1111', $this->withAuthorizationHeader(), [])
+            ->with('post', 'https://api.stripe.com/v1/customers/1111', $this->withAuthorizationHeader(), [
+                'email' => 'new email',
+            ])
             ->will($this->returnResponseFromFixture(200, '/customer/update.json'));
 
-        $customer = $this->stripe->customers()->update('1111');
+        $customer = $this->stripe->customers()->update('1111', ['email' => 'new email']);
 
         $this->assertInstanceOf(Customer::class, $customer);
         $this->assertEquals('cus_9fA90MYIdeUzKQ', $customer->value()->id);
