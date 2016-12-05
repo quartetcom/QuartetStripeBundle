@@ -82,6 +82,16 @@ class Customer
     }
 
     /**
+     * @return Collection An array of the customer's Card.
+     */
+    public function sources()
+    {
+        return new Collection($this->scope, $this->delegate->sources, function (StripeApi\Card $source) {
+            return new Card($this->scope, $source);
+        });
+    }
+
+    /**
      * @param callable $fn
      *
      * @return Customer
