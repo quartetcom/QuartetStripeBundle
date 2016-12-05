@@ -1,5 +1,16 @@
 services:
   quartet.stripe:
     class: Quartet\Stripe\Stripe
+    factory: ["@quartet.stripe_factory", "create"]
     arguments:
       - ~ # api key
+      - ~ # http client
+
+  quartet.stripe.http:
+    public: false
+    class: Stripe\HttpClient\ClientInterface
+    factory: [Stripe\HttpClient\CurlClient, instance]
+
+  quartet.stripe_factory:
+    public: false
+    class: Quartet\StripeBundle\StripeFactory

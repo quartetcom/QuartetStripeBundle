@@ -59,7 +59,7 @@ class StripeBuilder
      *
      * @return $this
      */
-    public function logger(LoggerInterface $logger)
+    public function logger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
 
