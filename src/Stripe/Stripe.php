@@ -5,10 +5,29 @@ namespace Quartet\Stripe;
 
 use Quartet\Stripe\Api\Charge;
 use Quartet\Stripe\Api\Customer;
-use Quartet\Stripe\Scope\Override;
 
 class Stripe
 {
+    /**
+     * @param string $apiKey
+     *
+     * @return StripeBuilder
+     */
+    static public function builder($apiKey)
+    {
+        return new StripeBuilder($apiKey);
+    }
+
+    /**
+     * @param string $apiKey
+     *
+     * @return Stripe
+     */
+    public static function factory($apiKey)
+    {
+        return self::builder($apiKey)->get();
+    }
+
     /**
      * @var Scope
      */
@@ -17,12 +36,11 @@ class Stripe
     /**
      * Stripe constructor.
      *
-     * @param string $apiKey
+     * @param Scope $scope
      */
-    public function __construct($apiKey)
+    public function __construct(Scope $scope)
     {
-        $this->scope = (new Scope())
-            ->override(Override::apiKey($apiKey));
+        $this->scope = $scope;
     }
 
     /**
