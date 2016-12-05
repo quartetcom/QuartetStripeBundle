@@ -5,7 +5,6 @@ namespace Quartet\Stripe\Api\Model;
 
 use Quartet\Stripe\Scope;
 use Stripe\Collection as Delegate;
-use Traversable;
 
 class Collection implements \IteratorAggregate
 {
@@ -36,6 +35,25 @@ class Collection implements \IteratorAggregate
         $this->scope = $scope;
         $this->delegate = $delegate;
         $this->map = $map;
+    }
+
+    /**
+     * @param null $params
+     * @param null $opts
+     *
+     * @return object
+     */
+    public function create($params = null, $opts = null)
+    {
+        return $this->scope->evaluate(function () use ($params, $opts) {
+            $value = $this->delegate->create($params, $opts);
+
+            if (is_array($value)) {
+                throw new \UnexpectedValueException(sprintf('%s does not support Array return type currently.', __METHOD__));
+            }
+
+            return call_user_func($this->map, $value);
+        });
     }
 
     /**

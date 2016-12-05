@@ -85,6 +85,29 @@ class CustomerTest extends ApiTestCase
         $sources = $this->customer->sources()->toArray();
         $this->assertCount(1, $sources);
         $this->assertEquals('4242', $sources[0]->value()->last4);
+    }
 
+    public function testSourcesCreate()
+    {
+        $this->http
+            ->expects($this->once())
+            ->method('request')
+            ->with('post', $this->stripeUrl('/customers/cus_9f8ojTFotEFqXB/sources'), $this->withAuthorizationHeader(), [
+                'sources' => [
+                    'foo' => 'bar',
+                ],
+            ])
+            ->will($this->returnResponse(200, json_encode([
+                'id' => 111,
+                'object' => 'card',
+            ])));
+
+        /* @var Card $card */
+        $card = $this->customer->sources()->create([
+            'sources' => [
+                'foo' => 'bar',
+            ]
+        ]);
+        $this->assertEquals(111, $card->value()->id);
     }
 }
