@@ -4,6 +4,8 @@
 namespace Quartet\Stripe\Scope;
 
 
+use Stripe\HttpClient\ClientInterface;
+
 abstract class Override
 {
     /**
@@ -22,6 +24,16 @@ abstract class Override
     public static function apiKey($apiKey)
     {
         return new OverrideImpl\ApiKeyOverride($apiKey);
+    }
+
+    /**
+     * @param ClientInterface $client
+     *
+     * @return Override
+     */
+    public static function httpClient(ClientInterface $client)
+    {
+        return new OverrideImpl\HttpClientOverride($client);
     }
 
     /**
