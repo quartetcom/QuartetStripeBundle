@@ -78,4 +78,13 @@ class CustomerTest extends ApiTestCase
         $this->assertInstanceOf(Charge::class, $charges[0]);
         $this->assertEquals(100, $charges[0]->value()->amount);
     }
+
+    public function testSources()
+    {
+        /* @var Card[] $sources */
+        $sources = $this->customer->sources()->toArray();
+        $this->assertCount(1, $sources);
+        $this->assertEquals('4242', $sources[0]->value()->last4);
+
+    }
 }
