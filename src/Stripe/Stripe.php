@@ -9,6 +9,26 @@ use Quartet\Stripe\Api\Customer;
 class Stripe
 {
     /**
+     * @param string $apiKey
+     *
+     * @return StripeBuilder
+     */
+    static public function builder($apiKey)
+    {
+        return new StripeBuilder($apiKey);
+    }
+
+    /**
+     * @param string $apiKey
+     *
+     * @return Stripe
+     */
+    public static function factory($apiKey)
+    {
+        return self::builder($apiKey)->get();
+    }
+
+    /**
      * @var Scope
      */
     private $scope;
@@ -16,11 +36,11 @@ class Stripe
     /**
      * Stripe constructor.
      *
-     * @param string $apiKey
+     * @param Scope $scope
      */
-    public function __construct($apiKey)
+    public function __construct(Scope $scope)
     {
-        $this->scope = new Scope($apiKey);
+        $this->scope = $scope;
     }
 
     /**

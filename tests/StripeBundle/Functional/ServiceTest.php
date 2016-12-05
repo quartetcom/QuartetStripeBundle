@@ -22,6 +22,5 @@ class ServiceTest extends WebTestCase
         /* @var Stripe $stripe */
         $stripe = static::$kernel->getContainer()->get('quartet.stripe');
         $this->assertInstanceOf(Stripe::class, $stripe);
-        $this->assertEquals('stripe api secret', $stripe->scope()->getApiKey());
     }
 }

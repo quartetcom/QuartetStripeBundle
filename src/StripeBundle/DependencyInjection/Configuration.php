@@ -36,6 +36,8 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->cannotBeEmpty()
                 ->end()
+                ->scalarNode('logger')->defaultNull()->end()
+                ->booleanNode('debug')->defaultFalse()->end()
             ->end()
         ;
     }

@@ -1,5 +1,15 @@
 framework:
   secret: secret
+
+monolog:
+  handlers:
+    file_log:
+      type: stream
+      path: "%kernel.logs_dir%/test.log"
+
 quartet_stripe:
   api_secret: stripe api secret
   api_public: stripe api public
+  logger: logger
+  debug: true
+

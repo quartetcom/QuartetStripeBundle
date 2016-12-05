@@ -36,7 +36,7 @@ class ApiTestCase extends \PHPUnit_Framework_TestCase
      */
     public function stripe($apiKey)
     {
-        return new Stripe($apiKey);
+        return Stripe::factory($apiKey);
     }
 
     /**
