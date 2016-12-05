@@ -6,6 +6,7 @@ namespace Quartet\StripeBundle\Functional;
 
 use Quartet\StripeBundle\QuartetStripeBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -18,6 +19,7 @@ class TestKernel extends Kernel
     {
         return [
             new FrameworkBundle(),
+            new MonologBundle(),
             new QuartetStripeBundle(),
         ];
     }

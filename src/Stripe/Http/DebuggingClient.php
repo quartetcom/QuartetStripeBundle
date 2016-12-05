@@ -5,6 +5,7 @@ namespace Quartet\Stripe\Http;
 
 
 use Stripe\HttpClient\ClientInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class DebuggingClient implements ClientInterface
 {
@@ -14,7 +15,7 @@ class DebuggingClient implements ClientInterface
     private $delegate;
 
     /**
-     * @var array
+     * @var Request[]
      */
     private $requests = [];
 
@@ -38,13 +39,24 @@ class DebuggingClient implements ClientInterface
      */
     public function request($method, $absUrl, $headers, $params, $hasFile)
     {
-        $this->requests[] = [$method, $absUrl, $headers, $params, $hasFile];
+        $headers = $this->parseStripeHeaders($headers);
 
-        list ($rawBody, $httpStatusCode, $httpHeader) = $this->delegate->request($method, $absUrl, $headers, $params, $hasFile);
+        $request = Request::create($absUrl, $method, $params, $cookies = [], $files = [], $server = []);
+        $request->headers->add($headers);
 
-        $this->responses[] = [$rawBody, $httpStatusCode, $httpHeader];
+        $this->requests[] = $request;
 
-        return [$rawBody, $httpStatusCode, $httpHeader];
+        return $this->getResponse();
+    }
+
+    /**
+     * @param       $status
+     * @param       $body
+     * @param array $headers
+     */
+    public function addResponse($status, $body, array $headers = [])
+    {
+        $this->responses[] = [$body, $status, $headers];
     }
 
     /**
@@ -56,10 +68,46 @@ class DebuggingClient implements ClientInterface
     }
 
     /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        if ($request = array_shift($this->requests)) {
+            return $request;
+        }
+
+        throw new \LogicException('There are no expected request.');
+    }
+
+    /**
      * @return array
      */
-    public function getResponses()
+    private function getResponse()
     {
-        return $this->responses;
+        if ($response = array_shift($this->responses)) {
+            return $response;
+        }
+
+        throw new \LogicException('No more pseudo response');
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return array|mixed
+     */
+    private function parseStripeHeaders(array $headers)
+    {
+        $headers = array_reduce($headers, function (array $headers, $header) {
+            if (preg_match('/^([^:]+):\s+?(.*)$/', $header, $matches)) {
+                list($all, $key, $value) = $matches;
+
+                return array_merge($headers, [$key => $value]);
+            } else {
+                return $headers;
+            }
+        }, []);
+
+        return $headers;
     }
 }
