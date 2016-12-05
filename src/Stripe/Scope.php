@@ -4,49 +4,49 @@
 namespace Quartet\Stripe;
 
 
+use Quartet\Stripe\Scope\Override;
+use Quartet\Stripe\Scope\Value;
 use Stripe as StripeApi;
 
 class Scope
 {
     /**
-     * @var string
+     * @var Override
      */
-    private $apiKey;
+    private $override;
 
     /**
      * Scope constructor.
      *
-     * @param string $apiKey
+     * @param Override $override
      */
-    public function __construct($apiKey)
+    public function __construct(Override $override = null)
     {
-        $this->apiKey = $apiKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->apiKey;
+        $this->override = $override ?: new Override\NoopOverride();
     }
 
     /**
      * @param callable $fn
      *
-     * @return Scope\Value
+     * @return Value
      */
     public function run(Callable $fn)
     {
-        $apiKey = StripeApi\Stripe::getApiKey();
+        $value = $this->override->execute(function () use ($fn) {
+            return $fn($this);
+        });
 
-        StripeApi\Stripe::setApiKey($this->apiKey);
+        return new Value($this, $value);
+    }
 
-        $value = $fn($this);
-
-        StripeApi\Stripe::setApiKey($apiKey);
-
-        return new Scope\Value($this, $value);
+    /**
+     * @param Override $override
+     *
+     * @return Scope
+     */
+    public function override(Override $override)
+    {
+        return new self($this->override->compose($override));
     }
 
     /**

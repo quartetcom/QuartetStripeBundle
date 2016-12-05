@@ -5,6 +5,7 @@ namespace Quartet\Stripe;
 
 use Quartet\Stripe\Api\Charge;
 use Quartet\Stripe\Api\Customer;
+use Quartet\Stripe\Scope\Override;
 
 class Stripe
 {
@@ -20,7 +21,8 @@ class Stripe
      */
     public function __construct($apiKey)
     {
-        $this->scope = new Scope($apiKey);
+        $this->scope = (new Scope())
+            ->override(Override::apiKey($apiKey));
     }
 
     /**
