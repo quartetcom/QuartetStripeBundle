@@ -47,7 +47,7 @@ class StripeBuilder
      *
      * @return $this
      */
-    public function httpClient(HttpClient\ClientInterface $httpClient)
+    public function httpClient(HttpClient\ClientInterface $httpClient = null)
     {
         $this->httpClient = $httpClient;
 
