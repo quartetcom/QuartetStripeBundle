@@ -51,6 +51,19 @@ class Card
     }
 
     /**
+     * @param array|null $params
+     * @param array|string|null $opts
+     *
+     * @return Card The deleted card
+     */
+    public function delete($params = null, $opts = null)
+    {
+        return $this->map(function (Delegate $delegate) use ($params, $opts) {
+            return $delegate->delete($params, $opts);
+        });
+    }
+
+    /**
      * @param callable $fn
      *
      * @return Card

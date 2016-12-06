@@ -80,4 +80,21 @@ class CardTest extends ApiModelTestCase
         $this->assertEquals('12', $value->exp_month);
         $this->assertEquals('2025', $value->exp_year);
     }
+
+    public function testDelete()
+    {
+        /* @var Card $card */
+        $card = $this->customer->sources()->toArray()[0];
+
+        $this->http
+            ->expects($this->once())
+            ->method('request')
+            ->with('delete', $this->stripeUrl('/customers/cus_9f8ojTFotEFqXB/sources/card_19MCGYH5bhTTjb4oeasYK0bH'), $this->withAuthorizationHeader(), [])
+            ->will($this->returnResponseFromFixture(200, '/source/delete.json'));
+
+        $this->assertFalse(isset($card->value()->deleted));
+
+        $card = $card->delete();
+        $this->assertTrue($card->value()->deleted);
+    }
 }
