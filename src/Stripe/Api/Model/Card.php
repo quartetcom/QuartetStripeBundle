@@ -41,7 +41,7 @@ class Card
     /**
      * @param array|string|null $opts
      *
-     * @return Card The saved external account.
+     * @return Card The saved card
      */
     public function save($opts = null)
     {
