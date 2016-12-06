@@ -41,12 +41,25 @@ class Card
     /**
      * @param array|string|null $opts
      *
-     * @return Card The saved external account.
+     * @return Card The saved card
      */
     public function save($opts = null)
     {
         return $this->map(function (Delegate $delegate) use ($opts) {
             return $delegate->save($opts);
+        });
+    }
+
+    /**
+     * @param array|null $params
+     * @param array|string|null $opts
+     *
+     * @return Card The deleted card
+     */
+    public function delete($params = null, $opts = null)
+    {
+        return $this->map(function (Delegate $delegate) use ($params, $opts) {
+            return $delegate->delete($params, $opts);
         });
     }
 
