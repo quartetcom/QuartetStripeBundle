@@ -4,30 +4,29 @@
 namespace Quartet\Stripe\Api\Model;
 
 
-use Quartet\Stripe\Api\ApiTestCase;
 use Stripe;
 
-class ChargeTest extends ApiTestCase
+class ChargeTest extends ApiModelTestCase
 {
     /**
      * @var Charge
      */
     private $charge;
 
-    protected function setUp()
+    /**
+     * @inheritDoc
+     */
+    protected function setupModel(\PHPUnit_Framework_MockObject_MockObject $httpClient)
     {
-        parent::setUp();
-
-        $this->mockHttpClient()
+        $httpClient
             ->expects($this->once())
             ->method('request')
             ->with('get', $this->stripeUrl('/charges/111'), $this->withAuthorizationHeader(), [])
             ->will($this->returnResponseFromFixture(200, '/charge/retrieve.json'));
 
         $this->charge = $this->stripe->charges()->retrieve(111);
-
-        $this->mockHttpClient($this->http);
     }
+
 
     public function testSave()
     {

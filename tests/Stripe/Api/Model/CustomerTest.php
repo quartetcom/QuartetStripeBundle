@@ -4,30 +4,27 @@
 namespace Quartet\Stripe\Api\Model;
 
 
-use Quartet\Stripe\Api\ApiTestCase;
 use Stripe;
 
-class CustomerTest extends ApiTestCase
+class CustomerTest extends ApiModelTestCase
 {
     /**
      * @var Customer
      */
     private $customer;
 
-    protected function setUp()
+    /**
+     * @inheritDoc
+     */
+    protected function setupModel(\PHPUnit_Framework_MockObject_MockObject $httpClient)
     {
-        parent::setUp();
-
-        $http = $this->mockHttpClient();
-        $http
+        $httpClient
             ->expects($this->once())
             ->method('request')
             ->with('get', 'https://api.stripe.com/v1/customers/3', $this->withAuthorizationHeader())
             ->will($this->returnResponseFromFixture(200, '/customer/retrieve.json'));
 
         $this->customer = $this->stripe->customers()->retrieve(3);
-
-        $this->mockHttpClient($this->http);
     }
 
     public function testDelete()
