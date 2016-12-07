@@ -40,7 +40,7 @@ class StripeClientTest extends WebTestCase
     {
         /* @var DebuggingClient $client */
         $client = static::$kernel->getContainer()->get('quartet.stripe.http.debugging');
-        $client->addResponse(200, '{"id":"11111"}');
+        $client->addResponse('{"id":"11111"}');
 
         $this->assertFileNotExists($this->log->getPathname());
 
@@ -51,7 +51,7 @@ class StripeClientTest extends WebTestCase
         $this->assertContains('app.INFO: request {"method":"get","url":"https://api.stripe.com/v1/customers/1"', file_get_contents($this->log->getPathname()));
 
         // debugger
-        $request = $client->getRequest();
+        $request = $client->getLastRequest();
         $this->assertEquals('GET', $request->getMethod());
         $this->assertEquals('https://api.stripe.com/v1/customers/1', $request->getUri());
         $this->assertEquals('Bearer stripe api secret', $request->headers->get('Authorization'));
