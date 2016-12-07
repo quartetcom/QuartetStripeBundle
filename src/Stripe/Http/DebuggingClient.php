@@ -5,7 +5,9 @@ namespace Quartet\Stripe\Http;
 
 
 use Stripe\HttpClient\ClientInterface;
+use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DebuggingClient implements ClientInterface
 {
@@ -20,7 +22,7 @@ class DebuggingClient implements ClientInterface
     private $requests = [];
 
     /**
-     * @var array
+     * @var Response[]
      */
     private $responses = [];
 
@@ -39,28 +41,31 @@ class DebuggingClient implements ClientInterface
      */
     public function request($method, $absUrl, $headers, $params, $hasFile)
     {
-        $headers = $this->parseStripeHeaders($headers);
+        $this->requests[] = $request = $this->toSymfonyRequest($method, $absUrl, $headers, $params, $hasFile);
 
-        $request = Request::create($absUrl, $method, $params, $cookies = [], $files = [], $server = []);
-        $request->headers->add($headers);
+        $response = null;
 
-        $this->requests[] = $request;
+        try {
+            $response = $this->getResponse();
+        } catch (\Exception $e) {
+            throw new \LogicException(sprintf('No pseudo response for request: %s', $request));
+        }
 
-        return $this->getResponse();
+        return $this->toStripeResponse($response);
     }
 
     /**
-     * @param       $status
-     * @param       $body
-     * @param array $headers
+     * @param string $body
+     * @param int    $status
+     * @param array  $headers
      */
-    public function addResponse($status, $body, array $headers = [])
+    public function addResponse($body, $status = 200, array $headers = [])
     {
-        $this->responses[] = [$body, $status, $headers];
+        $this->responses[] = new Response($body, $status, $headers);
     }
 
     /**
-     * @return array
+     * @return Request[]
      */
     public function getRequests()
     {
@@ -70,17 +75,19 @@ class DebuggingClient implements ClientInterface
     /**
      * @return Request
      */
-    public function getRequest()
+    public function getLastRequest()
     {
-        if ($request = array_shift($this->requests)) {
-            return $request;
+        if ($tail = array_slice($this->requests, -1)) {
+            return $tail[0];
         }
 
-        throw new \LogicException('There are no expected request.');
+        throw new \LogicException('There are no requests.');
     }
 
     /**
-     * @return array
+     * @return Response
+     *
+     * @throws \Exception
      */
     private function getResponse()
     {
@@ -88,17 +95,46 @@ class DebuggingClient implements ClientInterface
             return $response;
         }
 
-        throw new \LogicException('No more pseudo response');
+        throw new \Exception('No more pseudo response');
+    }
+
+    /**
+     * @param $method
+     * @param $absUrl
+     * @param $headers
+     * @param $params
+     * @param $hasFile
+     *
+     * @return Request
+     */
+    private function toSymfonyRequest($method, $absUrl, $headers, $params, $hasFile)
+    {
+        $headers = $this->toSymfonyHeaders($headers);
+
+        $request = Request::create($absUrl, $method, $params, $cookies = [], $files = [], $server = []);
+        $request->headers->add($headers);
+
+        return $request;
+    }
+
+    /**
+     * @param Response $response
+     *
+     * @return array
+     */
+    private function toStripeResponse(Response $response)
+    {
+        return [$response->getContent(), $response->getStatusCode(), $this->toStripeHeaders($response->headers)];
     }
 
     /**
      * @param array $headers
      *
-     * @return array|mixed
+     * @return array
      */
-    private function parseStripeHeaders(array $headers)
+    private function toSymfonyHeaders(array $headers)
     {
-        $headers = array_reduce($headers, function (array $headers, $header) {
+        return array_reduce($headers, function (array $headers, $header) {
             if (preg_match('/^([^:]+):\s+?(.*)$/', $header, $matches)) {
                 list($all, $key, $value) = $matches;
 
@@ -107,7 +143,17 @@ class DebuggingClient implements ClientInterface
                 return $headers;
             }
         }, []);
+    }
 
-        return $headers;
+    /**
+     * @param HeaderBag $headers
+     *
+     * @return array
+     */
+    private function toStripeHeaders(HeaderBag $headers)
+    {
+        return array_reduce(array_keys($headers->keys()), function (array $acc, $key) use ($headers) {
+            return array_merge($acc, [sprintf('%s: %s', $key, $headers->get($key))]);
+        }, []);
     }
 }
