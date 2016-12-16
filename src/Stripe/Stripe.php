@@ -44,19 +44,11 @@ class Stripe
     }
 
     /**
-     * @return Scope
-     */
-    public function scope()
-    {
-        return $this->scope;
-    }
-
-    /**
      * @return Charge
      */
     public function charges()
     {
-        return new Charge($this);
+        return new Charge($this->scope);
     }
 
     /**
