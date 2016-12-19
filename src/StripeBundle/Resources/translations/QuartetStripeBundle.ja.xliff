@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" datatype="plaintext" original="">
+        <body>
+            <trans-unit id="invalid_number">
+                <source>The card number is not a valid credit card number.</source>
+                <target>カード番号が不正です</target>
+            </trans-unit>
+            <trans-unit id="invalid_expiry_month">
+                <source>The card's expiration month is invalid.</source>
+                <target>カードの有効期限月が不正です</target>
+            </trans-unit>
+            <trans-unit id="invalid_expiry_year">
+                <source>The card's expiration year is invalid.</source>
+                <target>カードの有効期限年が不正です</target>
+            </trans-unit>
+            <trans-unit id="invalid_cvc">
+                <source>The card's security code is invalid.</source>
+                <target>CVCセキュリティコードが不正です</target>
+            </trans-unit>
+            <trans-unit id="invalid_swipe_data">
+                <source>The card's swipe data is invalid.</source>
+                <target>The card's swipe data is invalid.</target>
+            </trans-unit>
+            <trans-unit id="incorrect_number">
+                <source>The card number is incorrect.</source>
+                <target>カード番号が違います</target>
+            </trans-unit>
+            <trans-unit id="expired_card">
+                <source>The card has expired.</source>
+                <target>カードの有効期限切れです</target>
+            </trans-unit>
+            <trans-unit id="incorrect_cvc">
+                <source>The card's security code is incorrect.</source>
+                <target>CVCが間違っています</target>
+            </trans-unit>
+            <trans-unit id="incorrect_zip">
+                <source>The card's zip code failed validation.</source>
+                <target>郵便番号が違います</target>
+            </trans-unit>
+            <trans-unit id="card_declined">
+                <source>The card was declined.</source>
+                <target>カードが決済に失敗しました</target>
+            </trans-unit>
+            <trans-unit id="missing">
+                <source>There is no card on a customer that is being charged.</source>
+                <target>請求している顧客には有効なカードがありません</target>
+            </trans-unit>
+            <trans-unit id="processing_error">
+                <source>An error occurred while processing the card.</source>
+                <target>処理中にエラーが発生しました</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -14,3 +14,8 @@ services:
   quartet.stripe_factory:
     public: false
     class: Quartet\StripeBundle\StripeFactory
+
+  quartet.stripe.error_message:
+    class: Quartet\StripeBundle\ErrorMessage
+    arguments:
+      - "@translator"

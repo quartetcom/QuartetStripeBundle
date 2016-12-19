@@ -13,16 +13,16 @@ class Charge
     /**
      * @var Stripe
      */
-    private $stripe;
+    private $scope;
 
     /**
      * Charge constructor.
      *
-     * @param Stripe $stripe
+     * @param Scope $scope
      */
-    public function __construct(Stripe $stripe)
+    public function __construct(Scope $scope)
     {
-        $this->stripe = $stripe;
+        $this->scope = $scope;
     }
 
     /**
@@ -33,7 +33,7 @@ class Charge
      */
     public function retrieve($id, $options = null)
     {
-        return $this->stripe->scope()->evaluate(function (Scope $scope) use ($id, $options) {
+        return $this->scope->evaluate(function (Scope $scope) use ($id, $options) {
             $charge = StripeApi\Charge::retrieve($id, $options);
 
             return new Model\Charge($scope, $charge);
@@ -48,7 +48,7 @@ class Charge
      */
     public function all($params = null, $options = null)
     {
-        return $this->stripe->scope()->evaluate(function (Scope $scope) use ($params, $options) {
+        return $this->scope->evaluate(function (Scope $scope) use ($params, $options) {
             $collection = StripeApi\Charge::all($params, $options);
 
             return new Model\Collection($scope, $collection, function (StripeApi\Charge $charge) use ($scope) {
@@ -65,7 +65,7 @@ class Charge
      */
     public function create($params = null, $options = null)
     {
-        return $this->stripe->scope()->evaluate(function (Scope $scope) use ($params, $options) {
+        return $this->scope->evaluate(function (Scope $scope) use ($params, $options) {
             $charge = StripeApi\Charge::create($params, $options);
 
             return new Model\Charge($scope, $charge);
@@ -81,7 +81,7 @@ class Charge
      */
     public function update($id, $params = null, $options = null)
     {
-        return $this->stripe->scope()->evaluate(function (Scope $scope) use ($id, $params, $options) {
+        return $this->scope->evaluate(function (Scope $scope) use ($id, $params, $options) {
             $charge = StripeApi\Charge::update($id, $params, $options);
 
             return new Model\Charge($scope, $charge);

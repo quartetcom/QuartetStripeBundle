@@ -37,7 +37,7 @@ class ApiKeyOverride extends AbstractOverride
      */
     protected function restore($stored)
     {
-        return Stripe::setApiKey($stored);
+        Stripe::setApiKey($stored);
     }
 
     /**

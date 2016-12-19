@@ -45,7 +45,7 @@ class HttpClientOverride extends AbstractOverride
      */
     protected function restore($stored)
     {
-        return $this->reflection->setValue($stored);
+        $this->reflection->setValue($stored);
     }
 
     /**

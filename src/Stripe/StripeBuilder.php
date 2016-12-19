@@ -104,7 +104,7 @@ class StripeBuilder
         }
 
         if ($this->debug) {
-            $http = new DebuggingClient($http ?: HttpClient\CurlClient::instance(), $this->logger);
+            $http = new DebuggingClient($http ?: HttpClient\CurlClient::instance());
         }
 
         return $http;
