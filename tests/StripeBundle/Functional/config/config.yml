@@ -1,5 +1,6 @@
 framework:
   secret: secret
+  translator: ~
 
 monolog:
   handlers:
