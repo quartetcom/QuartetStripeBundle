@@ -3,31 +3,24 @@
 
 namespace Quartet\Stripe\Api\Model;
 
-use Quartet\Stripe\Scope;
+use Quartet\Stripe\Scope\Value;
 use Stripe\Card as Delegate;
 
 class Card
 {
     /**
-     * @var Scope
+     * @var Value
      */
-    private $scope;
-
-    /**
-     * @var Delegate
-     */
-    private $delegate;
+    private $value;
 
     /**
      * Card constructor.
      *
-     * @param Scope    $scope
-     * @param Delegate $delegate
+     * @param Value $value
      */
-    public function __construct(Scope $scope, Delegate $delegate)
+    public function __construct(Value $value)
     {
-        $this->scope = $scope;
-        $this->delegate = $delegate;
+        $this->value = $value;
     }
 
     /**
@@ -35,7 +28,7 @@ class Card
      */
     public function value()
     {
-        return $this->delegate;
+        return $this->value->get();
     }
 
     /**
@@ -70,8 +63,10 @@ class Card
      */
     public function map(Callable $fn)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($fn) {
-            return new self($scope, $fn($this->delegate));
+        $value = $this->value->map(function (Delegate $delegate) use ($fn) {
+            return $fn($delegate);
         });
+
+        return new self($value);
     }
 }

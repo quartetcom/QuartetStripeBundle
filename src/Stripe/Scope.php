@@ -62,4 +62,14 @@ class Scope
     {
         return $this->run($fn)->get();
     }
+
+    /**
+     * @param mixed $value
+     *
+     * @return Value
+     */
+    public function value($value)
+    {
+        return new Value\Success($this, $value);
+    }
 }

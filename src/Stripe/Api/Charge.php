@@ -33,10 +33,8 @@ class Charge
      */
     public function retrieve($id, $options = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($id, $options) {
-            $charge = StripeApi\Charge::retrieve($id, $options);
-
-            return new Model\Charge($scope, $charge);
+        return $this->run(function () use ($id, $options) {
+            return StripeApi\Charge::retrieve($id, $options);
         });
     }
 
@@ -48,12 +46,12 @@ class Charge
      */
     public function all($params = null, $options = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($params, $options) {
-            $collection = StripeApi\Charge::all($params, $options);
+        $collection = $this->scope->run(function () use ($params, $options) {
+            return StripeApi\Charge::all($params, $options);
+        });
 
-            return new Model\Collection($scope, $collection, function (StripeApi\Charge $charge) use ($scope) {
-                return new Model\Charge($scope, $charge);
-            });
+        return new Model\Collection($collection, function (StripeApi\Charge $charge) {
+            return new Model\Charge($this->scope->value($charge));
         });
     }
 
@@ -65,10 +63,8 @@ class Charge
      */
     public function create($params = null, $options = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($params, $options) {
-            $charge = StripeApi\Charge::create($params, $options);
-
-            return new Model\Charge($scope, $charge);
+        return $this->run(function () use ($params, $options) {
+            return StripeApi\Charge::create($params, $options);
         });
     }
 
@@ -81,10 +77,18 @@ class Charge
      */
     public function update($id, $params = null, $options = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($id, $params, $options) {
-            $charge = StripeApi\Charge::update($id, $params, $options);
-
-            return new Model\Charge($scope, $charge);
+        return $this->run(function () use ($id, $params, $options) {
+            return StripeApi\Charge::update($id, $params, $options);
         });
+    }
+
+    /**
+     * @param callable $fn
+     *
+     * @return Model\Charge
+     */
+    private function run(Callable $fn)
+    {
+        return new Model\Charge($this->scope->run($fn));
     }
 }

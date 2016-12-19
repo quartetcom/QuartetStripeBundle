@@ -3,32 +3,25 @@
 
 namespace Quartet\Stripe\Api\Model;
 
-use Quartet\Stripe\Scope;
-use Stripe\Customer as Delegate;
+use Quartet\Stripe\Scope\Value;
 use Stripe as StripeApi;
+use Stripe\Customer as Delegate;
 
 class Customer
 {
     /**
-     * @var Scope
+     * @var Value
      */
-    private $scope;
-
-    /**
-     * @var Delegate;
-     */
-    private $delegate;
+    private $value;
 
     /**
      * Customer constructor.
      *
-     * @param Scope    $scope
-     * @param Delegate $delegate
+     * @param Value $value
      */
-    public function __construct(Scope $scope, Delegate $delegate)
+    public function __construct(Value $value)
     {
-        $this->scope = $scope;
-        $this->delegate = $delegate;
+        $this->value = $value;
     }
 
     /**
@@ -36,7 +29,7 @@ class Customer
      */
     public function value()
     {
-        return $this->delegate;
+        return $this->value->get();
     }
 
     /**
@@ -71,13 +64,17 @@ class Customer
      */
     public function charges($params = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($params) {
+        $value = $this->value->map(function (Delegate $delegate) use ($params) {
             /* @var StripeApi\Collection $collection */
-            $collection = $this->delegate->charges($params);
+            return $delegate->charges($params);
+        });
 
-            return new Collection($scope, $collection, function (StripeApi\Charge $charge) use ($scope) {
-                return new Charge($scope, $charge);
+        return new Collection($value, function (StripeApi\Charge $charge) {
+            $value = $this->value->map(function () use ($charge) {
+                return $charge;
             });
+
+            return new Charge($value);
         });
     }
 
@@ -86,8 +83,16 @@ class Customer
      */
     public function sources()
     {
-        return new Collection($this->scope, $this->delegate->sources, function (StripeApi\Card $source) {
-            return new Card($this->scope, $source);
+        $sources = $this->value->map(function () {
+            return $this->value()->sources;
+        });
+
+        return new Collection($sources, function (StripeApi\Card $source) {
+            $value = $this->value->map(function () use ($source) {
+                return $source;
+            });
+
+            return new Card($value);
         });
     }
 
@@ -98,8 +103,10 @@ class Customer
      */
     public function map(Callable $fn)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($fn) {
-            return new self($scope, $fn($this->delegate));
+        $value = $this->value->map(function (Delegate $delegate) use ($fn) {
+            return $fn($delegate);
         });
+
+        return new self($value);
     }
 }

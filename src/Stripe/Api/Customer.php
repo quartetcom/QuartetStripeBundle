@@ -32,10 +32,8 @@ class Customer
      */
     public function retrieve($id, $opts = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($id, $opts) {
-            $customer = Stripe\Customer::retrieve($id, $opts);
-
-            return new Model\Customer($scope, $customer);
+        return $this->run(function () use ($id, $opts) {
+            return Stripe\Customer::retrieve($id, $opts);
         });
     }
 
@@ -47,12 +45,12 @@ class Customer
      */
     public function all($params = null, $opts = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($params, $opts) {
-            $collection = Stripe\Customer::all($params, $opts);
+        $value = $this->scope->run(function () use ($params, $opts) {
+            return Stripe\Customer::all($params, $opts);
+        });
 
-            return new Model\Collection($scope, $collection, function (Stripe\Customer $customer) use ($scope) {
-                return new Model\Customer($scope, $customer);
-            });
+        return new Model\Collection($value, function (Stripe\Customer $customer) {
+            return new Model\Customer($this->scope->value($customer));
         });
     }
 
@@ -64,10 +62,8 @@ class Customer
      */
     public function create($params = null, $opts = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($params, $opts) {
-            $customer = Stripe\Customer::create($params, $opts);
-
-            return new Model\Customer($scope, $customer);
+        return $this->run(function () use ($params, $opts) {
+            return Stripe\Customer::create($params, $opts);
         });
     }
 
@@ -80,11 +76,18 @@ class Customer
      */
     public function update($id, $params = null, $options = null)
     {
-        return $this->scope->evaluate(function (Scope $scope) use ($id, $params, $options) {
-            $customer = Stripe\Customer::update($id, $params, $options);
-
-            return new Model\Customer($scope, $customer);
+        return $this->run(function () use ($id, $params, $options) {
+            return Stripe\Customer::update($id, $params, $options);
         });
     }
 
+    /**
+     * @param callable $fn
+     *
+     * @return Model\Customer
+     */
+    private function run(Callable $fn)
+    {
+        return new Model\Customer($this->scope->run($fn));
+    }
 }
