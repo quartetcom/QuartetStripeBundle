@@ -32,11 +32,15 @@ class Scope
      */
     public function run(Callable $fn)
     {
-        $value = $this->override->execute(function () use ($fn) {
-            return $fn($this);
-        });
+        try {
+            $value = $this->override->execute(function () use ($fn) {
+                return $fn($this);
+            });
 
-        return new Value($this, $value);
+            return new Value\Success($this, $value);
+        } catch (\Exception $e) {
+            return new Value\Failure($this, $e);
+        }
     }
 
     /**

@@ -4,49 +4,24 @@
 namespace Quartet\Stripe\Scope;
 
 
-use Quartet\Stripe\Scope;
-
-class Value
+interface Value
 {
     /**
-     * @var Scope
-     */
-    private $scope;
-
-    /**
-     * @var mixed
-     */
-    private $value;
-
-    /**
-     * Value constructor.
+     * @param callable $fn
      *
-     * @param Scope $scope
-     * @param mixed $value
+     * @return Value
      */
-    public function __construct(Scope $scope, $value)
-    {
-        $this->scope = $scope;
-        $this->value = $value;
-    }
+    public function map(Callable $fn);
 
     /**
      * @param callable $fn
      *
      * @return Value
      */
-    public function map(Callable $fn)
-    {
-        return $this->scope->run(function (Scope $scope) use ($fn) {
-            return $fn($this->value, $scope);
-        });
-    }
+    public function recover(Callable $fn);
 
     /**
      * @return mixed
      */
-    public function get()
-    {
-        return $this->value;
-    }
+    public function get();
 }
