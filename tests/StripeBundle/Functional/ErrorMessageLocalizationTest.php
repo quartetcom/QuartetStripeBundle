@@ -30,6 +30,6 @@ class ErrorMessageLocalizationTest extends WebTestCase
     {
         $error = new StripeException\Api('The card number is not a valid credit card number.');
 
-        $this->assertEquals('カード番号が不正です', $this->errorMessage->getLocalizedMessage($error, 'ja'));
+        $this->assertEquals('カード番号が不正です。', $this->errorMessage->getLocalizedMessage($error, 'ja'));
     }
 }
