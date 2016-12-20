@@ -23,7 +23,7 @@
                 <target>The card's swipe data is invalid.</target>
             </trans-unit>
             <trans-unit id="incorrect_number">
-                <source>The card number is incorrect.</source>
+                <source>Your card number is incorrect.</source>
                 <target>カード番号が違います</target>
             </trans-unit>
             <trans-unit id="expired_card">
